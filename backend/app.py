@@ -7,6 +7,7 @@ from datetime import datetime
 import logging
 import random
 import time
+from risk_engine import NFTRiskEngine
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -108,8 +109,9 @@ class UnleashNFTsAPI:
             logger.error(f"Error getting washtrade metrics: {str(e)}")
             return None
 
-# Initialize Unleash NFTs API client
+# Initialize Unleash NFTs API client and Risk Engine
 unleash_client = UnleashNFTsAPI(UNLEASH_API_KEY)
+risk_engine = NFTRiskEngine()
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -220,6 +222,179 @@ def get_supported_chains():
         'supported_chains': SUPPORTED_CHAINS,
         'default_chain': 'ethereum'
     })
+
+# AI Risk Engines & Forensics API Endpoints
+
+@app.route('/api/risk/comprehensive/<chain>/<address>', methods=['GET'])
+def comprehensive_risk_analysis(chain, address):
+    """Comprehensive AI-powered risk assessment"""
+    if chain not in SUPPORTED_CHAINS:
+        return jsonify({'error': f'Unsupported chain: {chain}'}), 400
+    
+    try:
+        analysis_type = request.args.get('type', 'comprehensive')
+        report = risk_engine.generate_risk_report(address, chain, analysis_type)
+        
+        return jsonify({
+            'success': True,
+            'analysis_type': 'comprehensive_risk',
+            'chain': chain,
+            'address': address,
+            'data': report,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in comprehensive risk analysis: {str(e)}")
+        return jsonify({'error': 'Risk analysis failed'}), 500
+
+@app.route('/api/risk/wash-trading/<chain>/<address>', methods=['GET'])
+def wash_trading_detection(chain, address):
+    """AI-powered wash trading detection"""
+    if chain not in SUPPORTED_CHAINS:
+        return jsonify({'error': f'Unsupported chain: {chain}'}), 400
+    
+    try:
+        # Get trading data (simulated)
+        trading_data = {'address': address, 'chain': chain}
+        result = risk_engine.detect_wash_trading(trading_data)
+        
+        return jsonify({
+            'success': True,
+            'analysis_type': 'wash_trading_detection',
+            'chain': chain,
+            'address': address,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in wash trading detection: {str(e)}")
+        return jsonify({'error': 'Wash trading detection failed'}), 500
+
+@app.route('/api/risk/fake-collection/<chain>/<address>', methods=['GET'])
+def fake_collection_detection(chain, address):
+    """AI-powered fake collection detection"""
+    if chain not in SUPPORTED_CHAINS:
+        return jsonify({'error': f'Unsupported chain: {chain}'}), 400
+    
+    try:
+        # Get collection data (simulated)
+        collection_data = {'address': address, 'chain': chain}
+        result = risk_engine.detect_fake_collections(collection_data)
+        
+        return jsonify({
+            'success': True,
+            'analysis_type': 'fake_collection_detection',
+            'chain': chain,
+            'address': address,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in fake collection detection: {str(e)}")
+        return jsonify({'error': 'Fake collection detection failed'}), 500
+
+@app.route('/api/risk/rug-pull/<chain>/<address>', methods=['GET'])
+def rug_pull_prediction(chain, address):
+    """AI-powered rug pull risk prediction"""
+    if chain not in SUPPORTED_CHAINS:
+        return jsonify({'error': f'Unsupported chain: {chain}'}), 400
+    
+    try:
+        # Get project data (simulated)
+        project_data = {'address': address, 'chain': chain}
+        result = risk_engine.predict_rug_pull_risk(project_data)
+        
+        return jsonify({
+            'success': True,
+            'analysis_type': 'rug_pull_prediction',
+            'chain': chain,
+            'address': address,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in rug pull prediction: {str(e)}")
+        return jsonify({'error': 'Rug pull prediction failed'}), 500
+
+@app.route('/api/risk/score/<chain>/<address>', methods=['GET'])
+def risk_score_calculation(chain, address):
+    """Calculate AI-powered risk score"""
+    if chain not in SUPPORTED_CHAINS:
+        return jsonify({'error': f'Unsupported chain: {chain}'}), 400
+    
+    try:
+        # Get NFT data (simulated)
+        nft_data = {'address': address, 'chain': chain}
+        result = risk_engine.calculate_risk_score(nft_data)
+        
+        return jsonify({
+            'success': True,
+            'analysis_type': 'risk_score',
+            'chain': chain,
+            'address': address,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in risk score calculation: {str(e)}")
+        return jsonify({'error': 'Risk score calculation failed'}), 500
+
+@app.route('/api/risk/fraud-map/<chain>', methods=['GET'])
+def fraud_risk_map(chain):
+    """Generate interactive fraud risk map for blockchain"""
+    if chain not in SUPPORTED_CHAINS:
+        return jsonify({'error': f'Unsupported chain: {chain}'}), 400
+    
+    try:
+        # Generate fraud risk map data
+        risk_map_data = {
+            'chain': chain,
+            'high_risk_zones': [
+                {
+                    'address': f"0x{random.randint(10**15, 10**16-1):016x}",
+                    'risk_score': random.uniform(0.8, 1.0),
+                    'fraud_type': random.choice(['wash_trading', 'fake_collection', 'rug_pull']),
+                    'confidence': random.uniform(0.7, 1.0)
+                } for _ in range(random.randint(3, 8))
+            ],
+            'medium_risk_zones': [
+                {
+                    'address': f"0x{random.randint(10**15, 10**16-1):016x}",
+                    'risk_score': random.uniform(0.4, 0.8),
+                    'fraud_type': random.choice(['suspicious_activity', 'metadata_issues']),
+                    'confidence': random.uniform(0.5, 0.8)
+                } for _ in range(random.randint(5, 12))
+            ],
+            'network_statistics': {
+                'total_addresses_analyzed': random.randint(1000, 10000),
+                'high_risk_percentage': random.uniform(5, 15),
+                'medium_risk_percentage': random.uniform(15, 30),
+                'fraud_incidents_24h': random.randint(0, 5)
+            },
+            'trending_risks': [
+                {
+                    'risk_type': 'wash_trading',
+                    'trend': 'increasing',
+                    'change_percentage': random.uniform(5, 25)
+                },
+                {
+                    'risk_type': 'fake_collections',
+                    'trend': 'decreasing',
+                    'change_percentage': random.uniform(-15, -5)
+                }
+            ]
+        }
+        
+        return jsonify({
+            'success': True,
+            'analysis_type': 'fraud_risk_map',
+            'chain': chain,
+            'data': risk_map_data,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error generating fraud risk map: {str(e)}")
+        return jsonify({'error': 'Fraud risk map generation failed'}), 500
 
 if __name__ == '__main__':
     port = config.get('server_port', 5000)

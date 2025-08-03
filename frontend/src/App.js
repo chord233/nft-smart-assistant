@@ -36,7 +36,16 @@ import {
   Speed,
   GitHub,
   Twitter,
-  LinkedIn
+  LinkedIn,
+  Gavel,
+  VisibilityOff,
+  BugReport,
+  Assessment,
+  Map,
+  Timeline,
+  PieChart,
+  BarChart,
+  Dangerous
 } from '@mui/icons-material';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
@@ -50,7 +59,7 @@ function App() {
   const [supportedChains, setSupportedChains] = useState([]);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
-  const [activeTab, setActiveTab] = useState('price');
+  const [activeTab, setActiveTab] = useState('risk');
 
   useEffect(() => {
     fetchSupportedChains();
@@ -66,63 +75,97 @@ function App() {
     }
   };
 
-  const handlePriceAnalysis = async () => {
+  const handleRiskAnalysis = async () => {
+    if (!contractAddress) {
+      toast.error('Please enter a contract address');
+      return;
+    }
     setLoading(true);
     try {
       const response = await axios.get(
-        `/api/market/metrics/${selectedChain}?metrics=volume&time_range=24h&currency=usd`
+        `/api/risk/comprehensive/${selectedChain}/${contractAddress}`
       );
-      setResults({ type: 'price', data: response.data });
-      toast.success('Market metrics analysis completed!');
+      setResults({ type: 'comprehensive_risk', data: response.data });
+      toast.success('🔍 Comprehensive risk analysis completed!');
     } catch (error) {
-      console.error('Error getting market metrics:', error);
-      toast.error('Failed to get market metrics');
+      console.error('Error getting risk analysis:', error);
+      toast.error('Failed to complete risk analysis');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCollectionAnalysis = async () => {
+  const handleFakeCollectionDetection = async () => {
+    if (!contractAddress) {
+      toast.error('Please enter a contract address');
+      return;
+    }
     setLoading(true);
     try {
-      const response = await axios.get('/api/blockchains');
-      setResults({ type: 'collection', data: response.data });
-      toast.success('Blockchain analysis completed!');
+      const response = await axios.get(
+        `/api/risk/fake-collection/${selectedChain}/${contractAddress}`
+      );
+      setResults({ type: 'fake_collection_detection', data: response.data });
+      toast.success('🕵️ Fake collection detection completed!');
     } catch (error) {
-      console.error('Error getting blockchain analysis:', error);
-      toast.error('Failed to get blockchain analysis');
+      console.error('Error detecting fake collections:', error);
+      toast.error('Failed to detect fake collections');
     } finally {
       setLoading(false);
     }
   };
 
   const handleWashTradingDetection = async () => {
+    if (!contractAddress) {
+      toast.error('Please enter a contract address');
+      return;
+    }
     setLoading(true);
     try {
       const response = await axios.get(
-        `/api/market/multiple-metrics/${selectedChain}?metrics=volume&metrics=sales&time_range=24h&currency=usd`
+        `/api/risk/wash-trading/${selectedChain}/${contractAddress}`
       );
-      setResults({ type: 'wash-trading', data: response.data });
-      toast.success('Multiple metrics analysis completed!');
+      setResults({ type: 'wash_trading_detection', data: response.data });
+      toast.success('🚨 Wash trading detection completed!');
     } catch (error) {
-      console.error('Error getting multiple metrics:', error);
-      toast.error('Failed to get multiple metrics');
+      console.error('Error detecting wash trading:', error);
+      toast.error('Failed to detect wash trading');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleForgeryDetection = async () => {
+  const handleRugPullPrediction = async () => {
+    if (!contractAddress) {
+      toast.error('Please enter a contract address');
+      return;
+    }
     setLoading(true);
     try {
       const response = await axios.get(
-        `/api/market/washtrade/${selectedChain}?time_range=24h&currency=usd`
+        `/api/risk/rug-pull/${selectedChain}/${contractAddress}`
       );
-      setResults({ type: 'forgery', data: response.data });
-      toast.success('Washtrade metrics analysis completed!');
+      setResults({ type: 'rug_pull_prediction', data: response.data });
+      toast.success('⚠️ Rug pull risk prediction completed!');
     } catch (error) {
-      console.error('Error getting washtrade metrics:', error);
-      toast.error('Failed to get washtrade metrics');
+      console.error('Error predicting rug pull risk:', error);
+      toast.error('Failed to predict rug pull risk');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFraudMapGeneration = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `/api/risk/fraud-map/${selectedChain}`
+      );
+      setResults({ type: 'fraud_risk_map', data: response.data });
+      toast.success('🗺️ Fraud risk map generated!');
+    } catch (error) {
+      console.error('Error generating fraud map:', error);
+      toast.error('Failed to generate fraud map');
     } finally {
       setLoading(false);
     }
@@ -263,7 +306,7 @@ function App() {
                 fontSize: { xs: '2.5rem', md: '3.5rem' }
               }}
             >
-              NFT Smart Assistant
+              NFT Risk & Forensics Engine
             </Typography>
             <Typography 
               variant="h5" 
@@ -273,29 +316,29 @@ function App() {
                 fontWeight: 300
               }}
             >
-              AI-Powered NFT Analysis using bitsCrunch API
+              AI-Powered Risk Assessment & Fraud Detection
             </Typography>
             
             {/* Feature highlights */}
             <Grid container spacing={2} justifyContent="center" sx={{ mb: 4 }}>
               <Grid item>
                 <Chip 
-                  icon={<AutoAwesome />} 
-                  label="AI-Powered" 
+                  icon={<Security />} 
+                  label="Risk Detection" 
                   className="feature-chip"
                 />
               </Grid>
               <Grid item>
                 <Chip 
-                  icon={<Shield />} 
-                  label="Secure Analysis" 
+                  icon={<Gavel />} 
+                  label="Fraud Analysis" 
                   className="feature-chip"
                 />
               </Grid>
               <Grid item>
                 <Chip 
-                  icon={<Speed />} 
-                  label="Real-time Data" 
+                  icon={<Assessment />} 
+                  label="AI Forensics" 
                   className="feature-chip"
                 />
               </Grid>
@@ -319,7 +362,7 @@ function App() {
                       <Analytics />
                     </Avatar>
                     <Typography variant="h5" sx={{ fontWeight: 600, color: 'white' }}>
-                      NFT Information
+                      Target Analysis
                     </Typography>
                   </Box>
                   
@@ -433,7 +476,7 @@ function App() {
                       <Rocket />
                     </Avatar>
                     <Typography variant="h5" sx={{ fontWeight: 600, color: 'white' }}>
-                      Analysis Tools
+                      AI Risk Engine
                     </Typography>
                   </Box>
                   
@@ -443,8 +486,8 @@ function App() {
                         <Button
                           fullWidth
                           variant="contained"
-                          startIcon={<TrendingUp />}
-                          onClick={handlePriceAnalysis}
+                          startIcon={<Assessment />}
+                          onClick={handleRiskAnalysis}
                           disabled={loading}
                           className="cta-button"
                           sx={{ 
@@ -454,7 +497,7 @@ function App() {
                             fontWeight: 600
                           }}
                         >
-                          Price Prediction
+                          Comprehensive Risk Analysis
                         </Button>
                       </Grid>
                       
@@ -462,8 +505,8 @@ function App() {
                         <Button
                           fullWidth
                           variant="contained"
-                          startIcon={<Analytics />}
-                          onClick={handleCollectionAnalysis}
+                          startIcon={<VisibilityOff />}
+                          onClick={handleFakeCollectionDetection}
                           disabled={loading}
                           className="cta-button"
                           sx={{ 
@@ -473,7 +516,7 @@ function App() {
                             fontWeight: 600
                           }}
                         >
-                          Collection Analysis
+                          Fake Collection Detection
                         </Button>
                       </Grid>
                       
@@ -500,8 +543,27 @@ function App() {
                         <Button
                           fullWidth
                           variant="contained"
-                          startIcon={<Security />}
-                          onClick={handleForgeryDetection}
+                          startIcon={<Dangerous />}
+                          onClick={handleRugPullPrediction}
+                          disabled={loading}
+                          className="cta-button"
+                          sx={{ 
+                            mb: 2,
+                            height: '56px',
+                            fontSize: '1rem',
+                            fontWeight: 600
+                          }}
+                        >
+                          Rug Pull Risk Prediction
+                        </Button>
+                      </Grid>
+                      
+                      <Grid item xs={12}>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          startIcon={<Map />}
+                          onClick={handleFraudMapGeneration}
                           disabled={loading}
                           className="cta-button"
                           sx={{ 
@@ -510,7 +572,7 @@ function App() {
                             fontWeight: 600
                           }}
                         >
-                          Forgery Detection
+                          Fraud Risk Map
                         </Button>
                       </Grid>
                     </Grid>
