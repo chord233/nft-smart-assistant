@@ -1,0 +1,26 @@
+{
+  "bitscrunch_api_key": "your-bitscrunch-api-key-here",
+  "supported_chains": [
+    "ethereum",
+    "polygon",
+    "bsc"
+  ],
+  "server_port": 5000,
+  "frontend_port": 3000,
+  "api_settings": {
+    "timeout": 30,
+    "retry_attempts": 3,
+    "rate_limit": 100
+  },
+  "features": {
+    "price_prediction": true,
+    "wash_trading_detection": true,
+    "forgery_detection": true,
+    "collection_analysis": true
+  },
+  "ui_settings": {
+    "theme": "dark",
+    "default_chain": "ethereum",
+    "results_per_page": 20
+  }
+}
