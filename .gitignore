@@ -77,3 +77,4 @@ config/config.json
 # Package lock files (keep pnpm-lock.yaml)
 package-lock.json
 yarn.lock
+.vercel
